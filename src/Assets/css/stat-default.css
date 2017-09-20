@@ -1,0 +1,23 @@
+body {
+    /*     background-color: aqua; */
+}
+
+#PedalConnectorWebTest 
+{
+    /*width: 860px;*/
+}
+
+.query-table thead {
+    text-align: left;
+}
+
+.query-table td {
+    padding-right: 55px;
+}
+
+#query-result {
+    /*width: 760px;*/
+    /*width: 100%;*/
+    /*height: 500px;*/
+    /*margin-right: 55px;*/
+}
