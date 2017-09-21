@@ -9,13 +9,14 @@
 // Create chart objects associated with the container elements identified by the css selector.
 // Note: It is often a good idea to have these objects accessible at the global scope so that they can be modified or
 // filtered by other page controls.
-var yearlyBubbleChart = dc.bubbleChart('#yearly-bubble-chart');
+//var yearlyBubbleChart = dc.bubbleChart('#yearly-bubble-chart');
+var smallChart = dc.barChart('#small-chart');
 var gainOrLossChart = dc.pieChart('#gain-loss-chart');
 var quarterChart = dc.pieChart('#quarter-chart');
 var dayOfWeekChart = dc.rowChart('#day-of-week-chart');
-var fluctuationChart = dc.barChart('#fluctuation-chart');
+//var fluctuationChart = dc.barChart('#fluctuation-chart');
 var select1 = dc.selectMenu('#select1');
-var smallChart = dc.barChart('#small-chart');
+
 
 //### Load your data
 //d3.csv('ndx.csv', function (data) {
@@ -115,14 +116,14 @@ var smallChart = dc.barChart('#small-chart');
 
     // Create categorical dimension
     var gainOrLoss = ndx.dimension(function (d) {
-        return d.open > d.close ? 'Loss' : 'Gain';
+        return d.open > d.close ? 'Män' : 'Kvinnor';
     });
     // Produce counts records in the dimension
     var gainOrLossGroup = gainOrLoss.group();
 
     // Determine a histogram of percent changes
     var fluctuation = ndx.dimension(function (d) {
-        return Math.round((d.close - d.open) / d.open * 100);
+        return Math.round((d.close - d.open+100) / d.open * 100);
     });
     var fluctuationGroup = fluctuation.group();
 
@@ -157,98 +158,6 @@ var smallChart = dc.barChart('#small-chart');
     // Define chart attributes using fluent methods. See the
     // [dc.js API Reference](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md) for more information
     //
-
-    //#### Bubble Chart
-
-    //Create a bubble chart and use the given css selector as anchor. You can also specify
-    //an optional chart group for this chart to be scoped within. When a chart belongs
-    //to a specific group then any interaction with the chart will only trigger redraws
-    //on charts within the same chart group.
-    // <br>API: [Bubble Chart](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#bubble-chart)
-
-    yearlyBubbleChart /* dc.bubbleChart('#yearly-bubble-chart', 'chartGroup') */
-        // (_optional_) define chart width, `default = 200`
-        .width(990)
-        // (_optional_) define chart height, `default = 200`
-        .height(250)
-        // (_optional_) define chart transition duration, `default = 750`
-        .transitionDuration(1500)
-        .margins({top: 10, right: 50, bottom: 30, left: 40})
-        .dimension(yearlyDimension)
-        //The bubble chart expects the groups are reduced to multiple values which are used
-        //to generate x, y, and radius for each key (bubble) in the group
-        .group(yearlyPerformanceGroup)
-        // (_optional_) define color function or array for bubbles: [ColorBrewer](http://colorbrewer2.org/)
-        .colors(colorbrewer.RdYlGn[9])
-        //(optional) define color domain to match your data domain if you want to bind data or color
-        .colorDomain([-500, 500])
-    //##### Accessors
-
-        //Accessor functions are applied to each value returned by the grouping
-
-        // `.colorAccessor` - the returned value will be passed to the `.colors()` scale to determine a fill color
-        .colorAccessor(function (d) {
-            return d.value.absGain;
-        })
-        // `.keyAccessor` - the `X` value will be passed to the `.x()` scale to determine pixel location
-        .keyAccessor(function (p) {
-            return p.value.absGain;
-        })
-        // `.valueAccessor` - the `Y` value will be passed to the `.y()` scale to determine pixel location
-        .valueAccessor(function (p) {
-            return p.value.percentageGain;
-        })
-        // `.radiusValueAccessor` - the value will be passed to the `.r()` scale to determine radius size;
-        //   by default this maps linearly to [0,100]
-        .radiusValueAccessor(function (p) {
-            return p.value.fluctuationPercentage;
-        })
-        .maxBubbleRelativeSize(0.3)
-        .x(d3.scale.linear().domain([-2500, 2500]))
-        .y(d3.scale.linear().domain([-100, 100]))
-        .r(d3.scale.linear().domain([0, 4000]))
-        //##### Elastic Scaling
-
-        //`.elasticY` and `.elasticX` determine whether the chart should rescale each axis to fit the data.
-        .elasticY(true)
-        .elasticX(true)
-        //`.yAxisPadding` and `.xAxisPadding` add padding to data above and below their max values in the same unit
-        //domains as the Accessors.
-        .yAxisPadding(100)
-        .xAxisPadding(500)
-        // (_optional_) render horizontal grid lines, `default=false`
-        .renderHorizontalGridLines(true)
-        // (_optional_) render vertical grid lines, `default=false`
-        .renderVerticalGridLines(true)
-        // (_optional_) render an axis label below the x axis
-        .xAxisLabel('Index Gain')
-        // (_optional_) render a vertical axis lable left of the y axis
-        .yAxisLabel('Index Gain %')
-        //##### Labels and  Titles
-
-        //Labels are displayed on the chart for each bubble. Titles displayed on mouseover.
-        // (_optional_) whether chart should render labels, `default = true`
-        .renderLabel(true)
-        .label(function (p) {
-            return p.key;
-        })
-        // (_optional_) whether chart should render titles, `default = false`
-        .renderTitle(true)
-        .title(function (p) {
-            return [
-                p.key,
-                'Index Gain: ' + numberFormat(p.value.absGain),
-                'Index Gain in Percentage: ' + numberFormat(p.value.percentageGain) + '%',
-                'Fluctuation / Index Ratio: ' + numberFormat(p.value.fluctuationPercentage) + '%'
-            ].join('\n');
-        })
-        //#### Customize Axes
-
-        // Set a custom tick format. Both `.yAxis()` and `.xAxis()` return an axis object,
-        // so any additional method chaining applies to the axis, not the chart.
-        .yAxis().tickFormat(function (v) {
-            return v + '%';
-        });
 
     // #### Pie/Donut Charts
 
@@ -328,41 +237,6 @@ var smallChart = dc.barChart('#small-chart');
         .elasticX(true)
         .xAxis().ticks(4);
 
-    //#### Bar Chart
-
-    // Create a bar chart and use the given css selector as anchor. You can also specify
-    // an optional chart group for this chart to be scoped within. When a chart belongs
-    // to a specific group then any interaction with such chart will only trigger redraw
-    // on other charts within the same chart group.
-    // <br>API: [Bar Chart](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#bar-chart)
-    fluctuationChart /* dc.barChart('#volume-month-chart', 'chartGroup') */
-        .width(420)
-        .height(180)
-        .margins({top: 10, right: 50, bottom: 30, left: 40})
-        .dimension(fluctuation)
-        .group(fluctuationGroup)
-        .elasticY(true)
-        // (_optional_) whether bar should be center to its x value. Not needed for ordinal chart, `default=false`
-        .centerBar(true)
-        // (_optional_) set gap between bars manually in px, `default=2`
-        .gap(1)
-        // (_optional_) set filter brush rounding
-        .round(dc.round.floor)
-        .alwaysUseRounding(true)
-        .x(d3.scale.linear().domain([-25, 25]))
-        .renderHorizontalGridLines(true)
-        // Customize the filter displayed in the control span
-        .filterPrinter(function (filters) {
-            var filter = filters[0], s = '';
-            s += numberFormat(filter[0]) + '% -> ' + numberFormat(filter[1]) + '%';
-            return s;
-        });
-
-    // Customize axes
-    fluctuationChart.xAxis().tickFormat(
-        function (v) { return v + '%'; });
-    fluctuationChart.yAxis().ticks(5);
-
     //####  create selectmenu
     //yearDimension = ndx.dimension(function(d) { return d.letter; });
     //quarter.group()
@@ -374,15 +248,30 @@ var smallChart = dc.barChart('#small-chart');
         .controlsUseVisibility(true);
 
     // #### some fidgeting with a barchart
+    // life saver many thanks https://github.com/dc-js/dc.js/wiki/FAQ#remove-empty-bins
     var smalldata = data.slice(6700)
 
+    function remove_empty_bins(source_group) {
+        return {
+            all:function () {
+                return source_group.all().filter(function(d) {
+                    //return Math.abs(d.value) > 0.00001; // if using floating-point numbers
+                    return d.value !== 0; // if integers only
+                });
+            }
+        };
+    }
+    
+    var fakeGroup = remove_empty_bins(fluctuationGroup);
+
     smallChart /* dc.barChart('#volume-month-chart', 'chartGroup') */
-    .width(480)
+    .width(990)
     .height(180)
     .margins({top: 10, right: 50, bottom: 30, left: 40})
-    .dimension(quarter)
-    .group(quarter.group())
+    .dimension(fluctuation)
+    .group(fakeGroup)
     .elasticY(true)
+    .elasticX(true)
     // (_optional_) whether bar should be center to its x value. Not needed for ordinal chart, `default=false`
     .centerBar(false)
     // (_optional_) set gap between bars manually in px, `default=2`
@@ -394,7 +283,7 @@ var smallChart = dc.barChart('#small-chart');
     .colors(d3.scale.ordinal().domain(["positive","negative"])
                                 .range(["#00FF00","#FF0000"]))
     .colorAccessor(function(d) { 
-            if(d.value <0) 
+            if(d.key <0) 
                 return "positive"
             return "negative";})
     .xUnits(dc.units.ordinal)
