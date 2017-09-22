@@ -55,14 +55,25 @@ var select1 = dc.selectMenu('#select1');
 
     // #### some fidgeting with a barchart
     // life saver many thanks https://github.com/dc-js/dc.js/wiki/FAQ#remove-empty-bins
-    var byNameSyncGroup = [];
+    function remove_empty_bins(source_group) {
+        return {
+            all:function () {
+                return source_group.all().filter(function(d) {
+                    //return Math.abs(d.value) > 0.00001; // if using floating-point numbers
+                    return d.value !== 0; // if integers only
+                });
+            }
+        };
+    }
+    
+    var fakegroup = remove_empty_bins(grp1);
 
     smallChart /* dc.barChart('#volume-month-chart', 'chartGroup') */
     .width(990)
     .height(180)
     .margins({top: 10, right: 50, bottom: 30, left: 40})    
     .dimension(dim1)
-    .group(grp1)
+    .group(fakegroup)
     .elasticY(true)
     .elasticX(true)
     // (_optional_) whether bar should be center to its x value. Not needed for ordinal chart, `default=false`
