@@ -11,6 +11,7 @@
 // filtered by other page controls.
 var smallChart = dc.barChart('#small-chart');
 var select1 = dc.selectMenu('#select1');
+var sexChart = dc.pieChart('#sex-chart');
 
 
 //### Load your data
@@ -41,6 +42,9 @@ var select1 = dc.selectMenu('#select1');
     var sexDimension = ndx.dimension(function (d) {
         return d.sex;
     });
+
+    // Produce counts records in the dimension
+    var sexGroup = sexDimension.group();
 
     // Dimension by month
     //var moveMonths = ndx.dimension(function (d) {
@@ -94,13 +98,38 @@ var select1 = dc.selectMenu('#select1');
     .renderHorizontalGridLines(true);
     // Customize the filter displayed in the control span
 
-
+    // #### select list
     select1
     .dimension(dim2)
     .group(grp2)
     .multiple(true)
     .numberVisible(10)
     .controlsUseVisibility(true);
+
+
+    // diagram of sexes
+    sexChart /* dc.pieChart('#gain-loss-chart', 'chartGroup') */
+    // (_optional_) define chart width, `default = 200`
+        .width(180)
+    // (optional) define chart height, `default = 200`
+        .height(180)
+    // Define pie radius
+        .radius(80)
+    // Set dimension
+        .dimension(sexDimension)
+    // Set group
+        .group(sexGroup)
+    // (_optional_) by default pie chart will use `group.key` as its label but you can overwrite it with a closure.
+        .label(function (d) {
+            if (gainOrLossChart.hasFilter() && !gainOrLossChart.hasFilter(d.key)) {
+                return d.key + '(0%)';
+            }
+            var label = d.key;
+            if (all.value()) {
+                label += '(' + Math.floor(d.value / all.value() * 100) + '%)';
+            }
+            return label;
+        })
 
     //#### Rendering
 
