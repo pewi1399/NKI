@@ -11,7 +11,7 @@
 // filtered by other page controls.
 var smallChart = dc.barChart('#small-chart');
 var select1 = dc.selectMenu('#select1');
-var sexChart = dc.pieChart('#sex-chart');
+var customerChart = dc.pieChart('#sex-chart');
 
 
 //### Load your data
@@ -21,30 +21,39 @@ var sexChart = dc.pieChart('#sex-chart');
     var numberFormat = d3.format('.2f');
 
     data.forEach(function (d) {
-        d.type = d.actor+d.sex
+        d.type = d.myndighet + ' ' + d.customer + d.measure + d.Ar + d.group
     });
 
     //### Create Crossfilter Dimensions and Groups
 
     //See the [crossfilter API](https://github.com/square/crossfilter/wiki/API-Reference) for reference.
     var ndx = crossfilter(data);
-    var dim1 = ndx.dimension(function (d) { return d["type"]; })
-    var grp1 = dim1.group().reduceSum(function (d) { return d["open"]; })
-    var dim2 = ndx.dimension(function (d) { return d["type"]; })
-    var grp2 = dim2.group().reduceSum(function (d) { return d["open"]; })
+
+    // create two identical group one is "fake" for filtering twice on same dimension
+    var dim1 = ndx.dimension(function (d) { return d["myndighet"]; })
+    var grp1 = dim1.group().reduceSum(function (d) { return d["value"]; })
+    var dim2 = ndx.dimension(function (d) { return d["myndighet"]; })
+    var grp2 = dim2.group().reduceSum(function (d) { return d["value"]; })
+
+    // grouping for caputring all bars
+    var bardim = ndx.dimension(function (d) { return d["type"]; })
+    var bargrp = bardim.group().reduceSum(function (d) { return d["value"]; })
+    var bardim2 = ndx.dimension(function (d) { return d["type"]; })
+    var bargrp2 = bardim2.group().reduceSum(function (d) { return d["value"]; })
     var all = ndx.groupAll();
 
     // Dimension by year
-    //var actorDimension = ndx.dimension(function (d) {
+    //var myndighetDimension = ndx.dimension(function (d) {
     //});
 
     // Dimension by full date
-    var sexDimension = ndx.dimension(function (d) {
-        return d.sex;
+    var customerDimension = ndx.dimension(function (d) {
+        return d.customer;
     });
 
     // Produce counts records in the dimension
-    var sexGroup = sexDimension.group();
+    var customerGroup = customerDimension.group();
+
 
     // Dimension by month
     //var moveMonths = ndx.dimension(function (d) {
@@ -52,9 +61,29 @@ var sexChart = dc.pieChart('#sex-chart');
     //});
     // Group by total movement within month
     //var monthlyMoveGroup = moveMonths.group().reduceSum(function (d) {
-    //    return Math.abs(d.close - d.open);
+    //    return Math.abs(d.close - d.value);
     //});
    
+
+    // ---------------------------------- helpers --------------------------
+     function dcXaxisRotate(chart){
+        var xAxisMaxHeight = 0;
+        chart.selectAll("g.axis.x text")
+        //.style("text-anchor", "end")
+        .style("text-anchor", "start")
+        .attr("dx", "0.5em")
+        // .attr("dy", ".15em")
+        .attr("dy", "-0.5em")
+        .attr("transform", function (d) {
+            var coord = this.getBBox();
+            var x = coord.x + (coord.width / 2),
+            y = coord.y + (coord.height / 2);
+
+            //console.log("coord.width = " + coord.width + ", coord.width * Math.sin(Math.PI/4) = " + coord.width * Math.sin(Math.PI/4) );
+            xAxisMaxHeight = Math.max(xAxisMaxHeight, coord.width * Math.sin(Math.PI / 4))
+            return "rotate(45)"
+        });
+    }
     // -------------------------------- charts -----------------------------
 
     // #### some fidgeting with a barchart
@@ -70,13 +99,13 @@ var sexChart = dc.pieChart('#sex-chart');
         };
     }
     
-    var fakegroup = remove_empty_bins(grp1);
+    var fakegroup = remove_empty_bins(bargrp2);
 
     smallChart /* dc.barChart('#volume-month-chart', 'chartGroup') */
-    .width(990)
-    .height(180)
-    .margins({top: 10, right: 50, bottom: 30, left: 40})    
-    .dimension(dim1)
+    .width(1500)
+    .height(650)
+    .margins({top: 10, right: 50, bottom: 240, left: 40})    
+    .dimension(bardim)
     .group(fakegroup)
     .elasticY(true)
     .elasticX(true)
@@ -95,7 +124,8 @@ var sexChart = dc.pieChart('#sex-chart');
                 return "positive"
             return "negative";})
     .xUnits(dc.units.ordinal)
-    .renderHorizontalGridLines(true);
+    .renderHorizontalGridLines(true)
+    .on('pretransition', dcXaxisRotate);
     // Customize the filter displayed in the control span
 
     // #### select list
@@ -104,11 +134,12 @@ var sexChart = dc.pieChart('#sex-chart');
     .group(grp2)
     .multiple(true)
     .numberVisible(10)
-    .controlsUseVisibility(true);
+    .controlsUseVisibility(true)
+    .on('pretransition', dcXaxisRotate);
 
 
     // diagram of sexes
-    sexChart /* dc.pieChart('#gain-loss-chart', 'chartGroup') */
+    customerChart /* dc.pieChart('#gain-loss-chart', 'chartGroup') */
     // (_optional_) define chart width, `default = 200`
         .width(180)
     // (optional) define chart height, `default = 200`
@@ -116,11 +147,11 @@ var sexChart = dc.pieChart('#sex-chart');
     // Define pie radius
         .radius(80)
     // Set dimension
-        .dimension(sexDimension)
+        .dimension(customerDimension)
     // Set group
-        .group(sexGroup)
+        .group(customerGroup)
     // (_optional_) by default pie chart will use `group.key` as its label but you can overwrite it with a closure.
-        .label(function (d) {
+       /* .label(function (d) {
             if (gainOrLossChart.hasFilter() && !gainOrLossChart.hasFilter(d.key)) {
                 return d.key + '(0%)';
             }
@@ -130,7 +161,7 @@ var sexChart = dc.pieChart('#sex-chart');
             }
             return label;
         })
-
+*/
     //#### Rendering
 
     //simply call `.renderAll()` to render all charts on the page
