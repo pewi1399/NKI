@@ -15,6 +15,7 @@ var customerChart = dc.pieChart('#customer-chart');
 var yearChart = dc.pieChart('#year-chart');
 var segmentChart = dc.pieChart('#segment-chart');
 var questionSelect = dc.selectMenu('#question-select');
+var nkiCount = dc.dataCount('.dc-data-count');
 
 
 //### Load your data
@@ -236,11 +237,21 @@ function controlChart(chart, dimension, group){
 }
 
 controlChart(customerChart, customerDimension, customerGroup)
-
-
-
 controlChart(yearChart, yearDimension, yearGroup)
 controlChart(segmentChart, segmentDimension, segmentGroup)
+
+
+nkiCount /* dc.dataCount('.dc-data-count', 'chartGroup'); */
+    .dimension(ndx)
+    .group(all)
+    // (_optional_) `.html` sets different html when some records or all records are selected.
+    // `.html` replaces everything in the anchor with the html given using the following function.
+    // `%filter-count` and `%total-count` are replaced with the values obtained.
+    .html({
+        some: '<strong>%filter-count</strong> valda av <strong>%total-count</strong> mått' +
+            ' | <a href=\'javascript:dc.filterAll(); dc.renderAll();\'>Återställ alla filter</a>',
+        all: 'Alla tillgängliga mätvärden valda. Klicka på någon av figurerna för att filtrera.'
+    });
 
 
 
