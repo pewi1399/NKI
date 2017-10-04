@@ -14,6 +14,7 @@ var select1 = dc.selectMenu('#select1');
 var customerChart = dc.pieChart('#customer-chart');
 var yearChart = dc.pieChart('#year-chart');
 var segmentChart = dc.pieChart('#segment-chart');
+var questionSelect = dc.selectMenu('#question-select');
 
 
 //### Load your data
@@ -31,15 +32,19 @@ var segmentChart = dc.pieChart('#segment-chart');
     //See the [crossfilter API](https://github.com/square/crossfilter/wiki/API-Reference) for reference.
     var ndx = crossfilter(data);
 
-    // group for select 
+    // group for myndighet select 
     var myndighetDimension = ndx.dimension(function (d) { return d["myndighet"]; })
     var myndighetGroup = myndighetDimension.group().reduceSum(function (d) { return d["value"]; })
+
+    // group for question select 
+    var questionDimension = ndx.dimension(function (d) { return d["measure"]; })
+    var questionGroup = questionDimension.group().reduceSum(function (d) { return d["value"]; })
 
     // group for year pie 
     var yearDimension = ndx.dimension(function (d) { return d["Ar"]; })
     var yearGroup = yearDimension.group().reduceSum(function (d) { return d["value"]; })
 
-    // group for year pie 
+    // group for segment pie 
     var segmentDimension = ndx.dimension(function (d) { return d["group"]; })
     var segmentGroup = segmentDimension.group().reduceSum(function (d) { return d["value"]; })
 
@@ -87,6 +92,7 @@ var segmentChart = dc.pieChart('#segment-chart');
     customerDimension.filterExact("Sparare")
     myndighetDimension.filterExact("Pensionsmyndigheten")
     yearDimension.filterExact(2015)
+    questionDimension.filterExact("Förtroende för")
     //segmentDimension.filterExact("Total")
 
     // Dimension by month
@@ -117,6 +123,14 @@ var segmentChart = dc.pieChart('#segment-chart');
             xAxisMaxHeight = Math.max(xAxisMaxHeight, coord.width * Math.sin(Math.PI / 4))
             return "rotate(45)"
         });
+
+        if(chart.data()[0].values.length > 80){
+        chart.selectAll("g.axis.x text")
+        .attr("fill", "white")
+        } else {
+        chart.selectAll("g.axis.x text")
+        .attr("fill", "black")  
+        }
     }
     // -------------------------------- charts -----------------------------
 
@@ -172,6 +186,14 @@ var segmentChart = dc.pieChart('#segment-chart');
     select1
     .dimension(myndighetDimension)
     .group(myndighetGroup)
+    .multiple(true)
+    .numberVisible(10)
+    .controlsUseVisibility(true);
+
+    // #### question select
+    questionSelect
+    .dimension(questionDimension)
+    .group(questionGroup)
     .multiple(true)
     .numberVisible(10)
     .controlsUseVisibility(true);
@@ -237,3 +259,9 @@ controlChart(segmentChart, segmentDimension, segmentGroup)
     */
 
 //});
+
+// önskelista
+
+// om  smallChart.data()[0].values.length > 70 skriv inte ut någon underskrift på x axeln
+// markera de defaultfilter som sätts från start
+// Gör färg beroende på isntitution snarare än 
