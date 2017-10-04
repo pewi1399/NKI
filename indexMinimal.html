@@ -31,19 +31,35 @@
 
         <div class="clearfix"></div>
     </div>
+</div>
+
+<div class="row">
     <div id="select1">
     <div>
+    <strong>Myndighhet/Institution</strong>
       <a class='reset'
          href='javascript:select1.filterAll();dc.redrawAll();'
          style='visibility: hidden;'>reset</a>
     </div>
   </div>
-</div>
 
-<div class="row">
-    <div id="sex-chart">
+    <div id="customer-chart">
         <strong>Kundtyp</strong>
-        <a class="reset" href="javascript:sexChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+        <a class="reset" href="javascript:customerChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+        <div class="clearfix"></div>
+    </div>
+
+    <div id="year-chart">
+        <strong>År</strong>
+        <a class="reset" href="javascript:yearChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+        <div class="clearfix"></div>
+    </div>
+
+    <div id="segment-chart">
+        <strong>Segment</strong>
+        <a class="reset" href="javascript:segmentChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
         <div class="clearfix"></div>
     </div>
@@ -56,7 +72,7 @@
 </div>
 
 <script type="text/javascript" src="src/Assets/libs/d3-3.5.17/d3.js"></script>
-<script type="text/javascript" src="data/imgdata.js"></script>
+<script type="text/javascript" src="data/imgdata.js" charset="utf-8"></script>
 <script type="text/javascript" src="src/Assets/libs/crossfilter-1.4.1/crossfilter.js"></script>
 <script type="text/javascript" src="src/Assets/libs/dc.js-2.1.8/dc.js"></script>
 <script type="text/javascript" src="src/Assets/js/colorbrewer.js"></script>

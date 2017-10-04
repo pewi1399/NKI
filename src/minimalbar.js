@@ -11,7 +11,9 @@
 // filtered by other page controls.
 var smallChart = dc.barChart('#small-chart');
 var select1 = dc.selectMenu('#select1');
-var customerChart = dc.pieChart('#sex-chart');
+var customerChart = dc.pieChart('#customer-chart');
+var yearChart = dc.pieChart('#year-chart');
+var segmentChart = dc.pieChart('#segment-chart');
 
 
 //### Load your data
@@ -21,7 +23,7 @@ var customerChart = dc.pieChart('#sex-chart');
     var numberFormat = d3.format('.2f');
 
     data.forEach(function (d) {
-        d.type = d.myndighet + ' ' + d.customer + d.measure + d.Ar + d.group
+        d.type = d.measure + ' ' + d.myndighet + ' ' + d.customer + ' ' + d.group + ' ' + d.Ar
     });
 
     //### Create Crossfilter Dimensions and Groups
@@ -29,13 +31,19 @@ var customerChart = dc.pieChart('#sex-chart');
     //See the [crossfilter API](https://github.com/square/crossfilter/wiki/API-Reference) for reference.
     var ndx = crossfilter(data);
 
-    // create two identical group one is "fake" for filtering twice on same dimension
-    var dim1 = ndx.dimension(function (d) { return d["myndighet"]; })
-    var grp1 = dim1.group().reduceSum(function (d) { return d["value"]; })
-    var dim2 = ndx.dimension(function (d) { return d["myndighet"]; })
-    var grp2 = dim2.group().reduceSum(function (d) { return d["value"]; })
+    // group for select 
+    var myndighetDimension = ndx.dimension(function (d) { return d["myndighet"]; })
+    var myndighetGroup = myndighetDimension.group().reduceSum(function (d) { return d["value"]; })
 
-    // grouping for caputring all bars
+    // group for year pie 
+    var yearDimension = ndx.dimension(function (d) { return d["Ar"]; })
+    var yearGroup = yearDimension.group().reduceSum(function (d) { return d["value"]; })
+
+    // group for year pie 
+    var segmentDimension = ndx.dimension(function (d) { return d["group"]; })
+    var segmentGroup = segmentDimension.group().reduceSum(function (d) { return d["value"]; })
+
+    // grouping for caputring all bars including fakedim for redrawing x-scale
     var bardim = ndx.dimension(function (d) { return d["type"]; })
     var bargrp = bardim.group().reduceSum(function (d) { return d["value"]; })
     var bardim2 = ndx.dimension(function (d) { return d["type"]; })
@@ -51,9 +59,35 @@ var customerChart = dc.pieChart('#sex-chart');
         return d.customer;
     });
 
-    // Produce counts records in the dimension
-    var customerGroup = customerDimension.group();
+    var customerGroup = customerDimension.group()/*.reduce(        
+        function (p, v) {
+            p.grp = v.myndighet;
+            return p;
+        },
+        // callback for when data is removed from the current filter results 
+        function (p, v) {
+            p.grp = v.myndighet
+            return p;
+        },
+        // initialize p 
+        function () {
+            return {
+                grp: 0
+            };
+        }
+    );
+*/
 
+//    customerDimension.filterExact("Sparare")
+
+    // Produce counts records in the dimension
+    //var customerGroup = customerDimension.group();
+
+    // set default filters
+    customerDimension.filterExact("Sparare")
+    myndighetDimension.filterExact("Pensionsmyndigheten")
+    yearDimension.filterExact(2015)
+    //segmentDimension.filterExact("Total")
 
     // Dimension by month
     //var moveMonths = ndx.dimension(function (d) {
@@ -102,12 +136,13 @@ var customerChart = dc.pieChart('#sex-chart');
     var fakegroup = remove_empty_bins(bargrp2);
 
     smallChart /* dc.barChart('#volume-month-chart', 'chartGroup') */
-    .width(1500)
+    .width(1200)
     .height(650)
-    .margins({top: 10, right: 50, bottom: 240, left: 40})    
+    .margins({top: 10, right: 190, bottom: 240, left: 40})    
     .dimension(bardim)
     .group(fakegroup)
-    .elasticY(true)
+    .y(d3.scale.linear().domain([0, 100]))
+    //.elasticY(true)
     .elasticX(true)
     // (_optional_) whether bar should be center to its x value. Not needed for ordinal chart, `default=false`
     .centerBar(false)
@@ -117,12 +152,17 @@ var customerChart = dc.pieChart('#sex-chart');
     .round(dc.round.floor)
     .alwaysUseRounding(true)
     .x(d3.scale.ordinal())
-    .colors(d3.scale.ordinal().domain(["positive","negative"])
+    .colors(colorbrewer.RdYlGn[9])
+    .colorDomain([0, 100])
+    .colorAccessor(function (d) {
+            return d.value;
+        })/*
+    .colors(d3.scale.ordinal().domain(["Pensionsmyndigheten","negative"])
                                 .range(["#00FF00","#FF0000"]))
     .colorAccessor(function(d) { 
-            if(d.key <0) 
-                return "positive"
-            return "negative";})
+            if(d.key.indexOf("Pensionsmyndigheten") !== -1) 
+                return "Pensionsmyndigheten"
+            return "negative";})*/
     .xUnits(dc.units.ordinal)
     .renderHorizontalGridLines(true)
     .on('pretransition', dcXaxisRotate);
@@ -130,16 +170,17 @@ var customerChart = dc.pieChart('#sex-chart');
 
     // #### select list
     select1
-    .dimension(dim2)
-    .group(grp2)
+    .dimension(myndighetDimension)
+    .group(myndighetGroup)
     .multiple(true)
     .numberVisible(10)
-    .controlsUseVisibility(true)
-    .on('pretransition', dcXaxisRotate);
+    .controlsUseVisibility(true);
 
+
+function controlChart(chart, dimension, group){
 
     // diagram of sexes
-    customerChart /* dc.pieChart('#gain-loss-chart', 'chartGroup') */
+    chart /* dc.pieChart('#gain-loss-chart', 'chartGroup') */
     // (_optional_) define chart width, `default = 200`
         .width(180)
     // (optional) define chart height, `default = 200`
@@ -147,9 +188,16 @@ var customerChart = dc.pieChart('#sex-chart');
     // Define pie radius
         .radius(80)
     // Set dimension
-        .dimension(customerDimension)
+        .dimension(dimension)
     // Set group
-        .group(customerGroup)
+        .group(group)
+        /*.keyAccessor(function (p) {
+            return p.key;
+        })
+        .valueAccessor(function (p) {
+            return p.value;
+        })
+*/
     // (_optional_) by default pie chart will use `group.key` as its label but you can overwrite it with a closure.
        /* .label(function (d) {
             if (gainOrLossChart.hasFilter() && !gainOrLossChart.hasFilter(d.key)) {
@@ -162,6 +210,18 @@ var customerChart = dc.pieChart('#sex-chart');
             return label;
         })
 */
+
+}
+
+controlChart(customerChart, customerDimension, customerGroup)
+
+
+
+controlChart(yearChart, yearDimension, yearGroup)
+controlChart(segmentChart, segmentDimension, segmentGroup)
+
+
+
     //#### Rendering
 
     //simply call `.renderAll()` to render all charts on the page
@@ -177,19 +237,3 @@ var customerChart = dc.pieChart('#sex-chart');
     */
 
 //});
-
-
-
-
-
-//#### Versions
-
-//Determine the current version of dc with `dc.version`
-d3.selectAll('#version').text(dc.version);
-
-// Determine latest stable version in the repo via Github API
-d3.json('https://api.github.com/repos/dc-js/dc.js/releases/latest', function (error, latestRelease) {
-    /*jshint camelcase: false */
-    /* jscs:disable */
-    d3.selectAll('#latest').text(latestRelease.tag_name);
-});
