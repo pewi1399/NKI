@@ -14,7 +14,7 @@ var select1 = dc.selectMenu('#select1');
 var customerChart = dc.pieChart('#customer-chart');
 var yearChart = dc.pieChart('#year-chart');
 var segmentChart = dc.pieChart('#segment-chart');
-var questionSelect = dc.selectMenu('#question-select');
+//var questionSelect = dc.selectMenu('#question-select');
 var nkiCount = dc.dataCount('.dc-data-count');
 
 
@@ -248,7 +248,7 @@ nkiCount /* dc.dataCount('.dc-data-count', 'chartGroup'); */
     // `.html` replaces everything in the anchor with the html given using the following function.
     // `%filter-count` and `%total-count` are replaced with the values obtained.
     .html({
-        some: '<strong>%filter-count</strong> valda av <strong>%total-count</strong> mått' +
+        some: 'Klicka på figurerna nedan för att applicera filter. För närvarande är <strong>%filter-count</strong> av totalt <strong>%total-count</strong> mått valda' +
             ' | <a href=\'javascript:dc.filterAll(); dc.renderAll();\'>Återställ alla filter</a>',
         all: 'Alla tillgängliga mätvärden valda. Klicka på någon av figurerna för att filtrera.'
     });
