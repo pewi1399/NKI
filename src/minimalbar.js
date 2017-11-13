@@ -89,7 +89,11 @@ var nkiCount = dc.dataCount('.dc-data-count');
     // Produce counts records in the dimension
     //var customerGroup = customerDimension.group();
 
-
+    // set default filters
+    customerDimension.filterExact("Sparare")
+    myndighetDimension.filterExact("Pensionsmyndigheten")
+    yearDimension.filterExact(2015)
+    questionDimension.filterExact("Förtroende för")
     //segmentDimension.filterExact("Total")
 
     // Dimension by month
@@ -184,9 +188,7 @@ var nkiCount = dc.dataCount('.dc-data-count');
     .on('pretransition', dcXaxisRotate);
 
     // ordna bars utefter 
-    smallChart.ordering(function(d) { return -d.value; })
-
-    // Customize the filter displayed in the control span
+    smallChart.ordering(function(d) { return -d.value; });
 
     // #### select list
     select1

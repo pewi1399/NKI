@@ -21,7 +21,7 @@ out <-
 longdata %>% 
   mutate(
     group = sub("Sparare|Pensionar", "", key),
-    group = ifelse(group == "", "Total", group),
+    group = ifelse(group == "", "Samtliga", group),
     customer = sub("(Sparare|Pensionar)", "\\1_", key),
     customer = sub("_.*$", "", customer),
     value = ifelse(is.na(value), 0, value)
@@ -29,4 +29,5 @@ longdata %>%
   select(-key)
 
 
-writeLines(paste0("var data = ", toJSON(out)), "data/imgdata.js")
+
+writeLines(paste0("var data = ", toJSON(out)), "data/imgdata.js", useBytes = TRUE)
