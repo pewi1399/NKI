@@ -1,0 +1,59 @@
+
+.dc-chart .selected path, .dc-chart .selected circle {
+    stroke-width: 1;
+    stroke: #ccc;
+    fill-opacity: 1;
+    fill: #cc4202;
+}
+
+.dc-chart .deselected path, .dc-chart .deselected circle {
+    stroke: none;
+    fill-opacity: .5;
+}
+
+.dc-chart g.deselected path {
+    fill: #71645f;
+}
+
+.dc-chart .pie-slice path {
+	stroke-width: 1;
+    stroke: #ccc;
+}
+
+.dc-select-menu {
+    border: 1px solid #ccc;
+    width: 160px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: #fafafa url("img/icon-select.png") no-repeat 90% 50%;
+}
+
+.dc-select-menu select {
+    padding: 5px 8px;
+    width: 130%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+}
+
+.dc-select-menu select:focus {
+    outline: none;
+}
+
+.controlClass{
+    float: left;
+    margin-right: 30px;
+}
+
+.firstControl{
+    margin-left: 15px;
+}
+
+.tick line {
+	stroke-width: 0px;
+	stroke: white;
+}
+
+html { font-size: 85.5%; } 

@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>dc.js - Dimensional Charting Javascript Library</title>
+    <title>NKI</title>
 
     <meta charset="UTF-8">
 
     <link rel="stylesheet" type="text/css" href="src/Assets/libs/bootstrap-3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="src/Assets/libs/dc.js-2.1.8/dc.css"/>
+    <link rel="stylesheet" type="text/css" href="src/custom.css"/>
 
     <style>
         #monthly-volume-chart g.y {
@@ -17,53 +18,81 @@
             margin-top: 2em;
         }
     </style>
+
+        <!-- PM fonter etc -->
+    <link rel="stylesheet" href="https://www.pensionsmyndigheten.se/etc/clientlibs/pm-framework.40433ce8c29a09bb9496c4a6c555bd77.css" type="text/css">
+    <script type="text/javascript" src="https://www.pensionsmyndigheten.se/etc/clientlibs/pm-modernizr.319f35cfb78f704d1547680c7318ead7.js"></script>
+    <link rel="stylesheet" href="https://www.pensionsmyndigheten.se/etc/clientlibs/pm-mainsite.f69f79a0acf3afa62dce624d26d560d7.css" type="text/css">
 </head>
 <body>
 
-<div class="container">
-<h2>Nasdaq 100 Index 1985/11/01-2012/06/29</h2>
+<div class="container col-md-10 col-md-offset-1">
+
+<div class="row">
+    <div class="firstControl">
+        <h1>NKI</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="dc-data-count firstControl">
+
+        <span class="filter-count"></span> selected out of <span class="total-count"></span> records | <a
+            href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
+    </div>
+</div>
 
 <div class="row">
     <div id="small-chart" class="dc-chart">
-        <strong>Yearly Performance</strong> (radius: fluctuation/index ratio, color: gain/loss)
+        <div class = "firstControl">
+        <strong>Svarsandel</strong>
         <a class="reset" href="javascript:smallChart.filterAll();dc.redrawAll();"
            style="display: none;">reset</a>
+       </div>
 
         <div class="clearfix"></div>
     </div>
 </div>
 
 <div class="row">
-    <div id="gain-loss-chart">
-        <strong>Days by Gain/Loss</strong>
-        <a class="reset" href="javascript:gainOrLossChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-
-        <div class="clearfix"></div>
-    </div>
-
-    <div id="quarter-chart">
-        <strong>Quarters</strong>
-        <a class="reset" href="javascript:quarterChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-
-        <div class="clearfix"></div>
-    </div>
-
-    <div id="day-of-week-chart">
-        <strong>Day of Week</strong>
-        <a class="reset" href="javascript:dayOfWeekChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-
-        <div class="clearfix"></div>
-    </div>
-
-    <div id="select1">
+    <div id="question-select", class = "controlClass firstControl">
     <div>
+    <strong>Fråga</strong>
       <a class='reset'
-         href='javascript:select1.filterAll();dc.redrawAll();'
-         style='visibility: hidden;'>reset</a>
+         href='javascript:questionSelect.filterAll();dc.redrawAll();'
+         style='visibility: hidden;'>återställ</a>
     </div>
   </div>
 
+    <div id="select1"class = "controlClass">
+    <div>
+    <strong>Myndighhet/Institution</strong>
+      <a class='reset'
+         href='javascript:select1.filterAll();dc.redrawAll();'
+         style='visibility: hidden;'>återställ</a>
+    </div>
+  </div>
 
+    <div id="customer-chart" class ="controlClass">
+        <strong>Kundtyp</strong>
+        <a class="reset" href="javascript:customerChart.filterAll();dc.redrawAll();" style="display: none;">återställ</a>
+
+        <div class="clearfix"></div>
+    </div>
+
+    <div id="year-chart" class = "controlClass">
+        <strong>År</strong>
+        <a class="reset" href="javascript:yearChart.filterAll();dc.redrawAll();" style="display: none;">återställ</a>
+
+        <div class="clearfix"></div>
+    </div>
+
+    <div id="segment-chart" class = "controlClass">
+        <strong>Segment</strong>
+        <a class="reset" href="javascript:segmentChart.filterAll();dc.redrawAll();" style="display: none;">återställ</a>
+
+        <div class="clearfix"></div>
+    </div>
 </div>
 
 <div class="clearfix"></div>
@@ -72,12 +101,14 @@
 
 </div>
 
+
+<script type="text/javascript" src="src/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="src/Assets/libs/d3-3.5.17/d3.js"></script>
-<script type="text/javascript" src="data/ndx.js"></script>
+<script type="text/javascript" src="data/imgdata.js" charset="utf-8"></script>
 <script type="text/javascript" src="src/Assets/libs/crossfilter-1.4.1/crossfilter.js"></script>
 <script type="text/javascript" src="src/Assets/libs/dc.js-2.1.8/dc.js"></script>
 <script type="text/javascript" src="src/Assets/js/colorbrewer.js"></script>
-<script type="text/javascript" src="src/adaption.js"></script>
+<script type="text/javascript" src="src/minimalbar.js"></script>
 
 <script type="text/javascript">
     var _gaq = _gaq || [];
