@@ -22,7 +22,7 @@
 
 .dc-select-menu {
     border: 1px solid #ccc;
-    width: 160px;
+    width: 170px;
     border-radius: 3px;
     overflow: hidden;
     background: #fafafa url("img/icon-select.png") no-repeat 90% 50%;
@@ -44,7 +44,7 @@
 
 .controlClass{
     float: left;
-    margin-right: 30px;
+    margin-right: 40px;
 }
 
 .firstControl{
@@ -56,4 +56,38 @@
 	stroke: white;
 }
 
-html { font-size: 85.5%; } 
+.dc-chart .pie-slice {
+	fill: white;
+    font-size: 12px;
+    cursor: pointer;
+    font-family:PensioM;
+}
+
+.dc-chart .pie-slice.external {
+    fill: white;
+}
+
+html{
+	font-size: 85%
+}
+
+
+@font-face {
+    font-family: pm-icons;
+    src: url(resources/fonts/pm-icons.woff) format("woff"), url(resources/fonts/pm-icons.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: Pensio;
+    src: url(resources/fonts/PensioSans-Normal.woff2) format("woff2"), url(resources/fonts/PensioSans-Normal.woff) format("woff"), url(resources/fonts/PensioSans-Normal.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: PensioM;
+    font-weight: 700;
+    src: url(resources/fonts/PensioSans-Medium.woff2) format("woff2"), url(resources/fonts/PensioSans-Medium.woff) format("woff"), url(resources/fonts/PensioSans-Medium.ttf) format("truetype");
+}
+
+.nki_wrapper {
+	font-family: Pensio;
+}

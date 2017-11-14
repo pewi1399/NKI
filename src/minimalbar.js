@@ -90,10 +90,22 @@ var nkiCount = dc.dataCount('.dc-data-count');
     //var customerGroup = customerDimension.group();
 
     // set default filters
+
+    customerChart.filter('Sparare');
+    select1.filter('Pensionsmyndigheten')
+    //yearChart.filter(2015);
+    segmentChart.filter('Samtliga');
+    questionSelect.filter('Förtroende för')
+
+    yearChart.externalLabels(-25)
+    segmentChart.externalLabels(-25)
+
     customerDimension.filterExact("Sparare")
     myndighetDimension.filterExact("Pensionsmyndigheten")
-    yearDimension.filterExact(2015)
+    //yearDimension.filterExact(2015)
+    segmentDimension.filterExact('Samtliga')
     questionDimension.filterExact("Förtroende för")
+
     //segmentDimension.filterExact("Total")
 
     // Dimension by month
@@ -195,7 +207,7 @@ var nkiCount = dc.dataCount('.dc-data-count');
     .dimension(myndighetDimension)
     .group(myndighetGroup)
     .multiple(true)
-    .numberVisible(10)
+    .numberVisible(8)
     .controlsUseVisibility(true);
 
     // #### question select
@@ -203,7 +215,7 @@ var nkiCount = dc.dataCount('.dc-data-count');
     .dimension(questionDimension)
     .group(questionGroup)
     .multiple(true)
-    .numberVisible(10)
+    .numberVisible(8)
     .controlsUseVisibility(true);
 
 
@@ -269,11 +281,7 @@ nkiCount /* dc.dataCount('.dc-data-count', 'chartGroup'); */
 
     //#### Rendering
 
-        // set default filters
-    customerDimension.filterExact("Sparare")
-    myndighetDimension.filterExact("Pensionsmyndigheten")
-    yearDimension.filterExact(2015)
-    questionDimension.filterExact("Förtroende för")
+
 
     // change rendering to only key not total
     select1.title(function (d){

@@ -7,7 +7,10 @@
 
     <link rel="stylesheet" type="text/css" href="src/Assets/libs/bootstrap-3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="src/Assets/libs/dc.js-2.1.8/dc.css"/>
-    <link rel="stylesheet" type="text/css" href="src/custom.css"/>
+    <link rel="stylesheet" href="https://www.pensionsmyndigheten.se/etc/clientlibs/pm-framework.40433ce8c29a09bb9496c4a6c555bd77.css" type="text/css">
+    <script type="text/javascript" src="https://www.pensionsmyndigheten.se/etc/clientlibs/pm-modernizr.319f35cfb78f704d1547680c7318ead7.js"></script>
+    <link rel="stylesheet" href="https://www.pensionsmyndigheten.se/etc/clientlibs/pm-mainsite.f69f79a0acf3afa62dce624d26d560d7.css" type="text/css">
+    <link rel = "stylesheet" type = "text/css" href = "src/custom.css">
 
     <style>
         #monthly-volume-chart g.y {
@@ -19,14 +22,11 @@
         }
     </style>
 
-        <!-- PM fonter etc -->
-    <link rel="stylesheet" href="https://www.pensionsmyndigheten.se/etc/clientlibs/pm-framework.40433ce8c29a09bb9496c4a6c555bd77.css" type="text/css">
-    <script type="text/javascript" src="https://www.pensionsmyndigheten.se/etc/clientlibs/pm-modernizr.319f35cfb78f704d1547680c7318ead7.js"></script>
-    <link rel="stylesheet" href="https://www.pensionsmyndigheten.se/etc/clientlibs/pm-mainsite.f69f79a0acf3afa62dce624d26d560d7.css" type="text/css">
+
 </head>
 <body>
 
-<div class="container col-md-10 col-md-offset-1">
+<div class="container col-md-10 col-md-offset-1 nki_wrapper">
 
 <div class="row">
     <div class="firstControl">
@@ -66,7 +66,7 @@
 
     <div id="select1"class = "controlClass">
     <div>
-    <strong>Myndighhet/Institution</strong>
+    <strong> Institution </strong>
       <a class='reset'
          href='javascript:select1.filterAll();dc.redrawAll();'
          style='visibility: hidden;'>återställ</a>
@@ -93,6 +93,10 @@
 
         <div class="clearfix"></div>
     </div>
+</div>
+<div class="row">
+    <br>
+    <br>
 </div>
 
 <div class="clearfix"></div>
