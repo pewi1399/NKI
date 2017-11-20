@@ -17,7 +17,6 @@ var segmentChart = dc.pieChart('#segment-chart');
 var questionSelect = dc.selectMenu('#question-select');
 var nkiCount = dc.dataCount('.dc-data-count');
 
-
 //### Load your data
 //d3.csv('ndx.csv', function (data) {
     // Since its a csv file we need to format the data a bit.
@@ -29,7 +28,6 @@ var nkiCount = dc.dataCount('.dc-data-count');
     });
 
     //### Create Crossfilter Dimensions and Groups
-
     //See the [crossfilter API](https://github.com/square/crossfilter/wiki/API-Reference) for reference.
     var ndx = crossfilter(data);
 
